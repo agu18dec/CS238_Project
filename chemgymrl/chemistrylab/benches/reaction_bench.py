@@ -140,7 +140,7 @@ class ContactProcessReact_v0(GenBench):
 
         # Defining actions for the Contact Process
         actions = [
-            #Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',     [0],  0.01,  False),
+            Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',     [0],  0.01,  False),
             Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour SO2
             Action([2],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour O2
         ]
@@ -152,7 +152,7 @@ class ContactProcessReact_v0(GenBench):
         super(ContactProcessReact_v0, self).__init__(
             shelf,
             actions,
-            ["PVT", "spectra", "targets"],
+            ["PVT", "spectra", "targets", "layers"],
             targets=react_info.PRODUCTS,
             default_events=(Event("react", (Reaction(react_info),), None),),
             reward_function=r_rew,
