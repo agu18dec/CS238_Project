@@ -1,0 +1,27 @@
+{
+  "name": "Contact Process",
+  "REACTANTS": [
+    "SO2",
+    "O2"
+  ],
+  "PRODUCTS": [
+    "SO3"
+  ],
+  "SOLVENTS": [],
+  "MATERIALS": [
+    "SO2",
+    "O2",
+    "SO3"
+  ],
+  "pre_exp_arr": [ 553400000.0, 1e-07  ],
+  "activ_energy_arr": [ 1.0, 1.0  ],
+  "stoich_coeff_arr": [
+    [ 2.0, 1.0, 0.0 ],
+    [ 0.0, 0.0, 2.0 ]
+  ],
+  "conc_coeff_arr": [
+    [-2.0, 2.0 ],
+    [-1.0, 1.0 ],
+    [ 2.0,-2.0 ]
+  ]
+}
