@@ -1181,7 +1181,7 @@ class SO2(Material): #Initialize to correct values
             boiling_point=263.0,  # Kelvin
             solute=True,  # Typically not considered a solute in standard conditions
             specific_heat=0.622,  # J/g*K
-            enthalpy_vapor=None,  # Not typically required for gases
+            enthalpy_vapor=24900,  # Not typically required for gases
             index=2  # Unique index for identification
         )
 

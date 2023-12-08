@@ -62,24 +62,28 @@ env.reset()
 rgb = env.render()
 plt.imshow(rgb)
 plt.axis("off")
-plt.show()
+#plt.show()
 
 # action space is a 3-vector. Continous Action Spcae
 # Environmental Conditions -> discretized via 0 being decreased by dT or dV, 1/2 being no change, and 1 being increase in dT or dV
 # Chemicals -> discretized via 0 being no reagents added, 1 being all added, with negative reward if more than available is added
 d = False
 state = env.reset()
+print(state)
 total_reward = 0
 
+print(env.action_space.shape[0])
 action = np.ones(env.action_space.shape[0])
-print(f'Target: {env.target_material}')
-for i, a in enumerate(env.actions):
-    v,event = env.shelf[a[0][0][0]],a[0][0][1]
-    action[i] = float(input(f'{v}: {event.name} -> {event.other_vessel}| '))
+print(f'Target: {env.unwrapped.target_material}')
+for i, a in enumerate(env.unwrapped.actions):
+    i, a = env.unwrapped.actions
+    v,event = env.unwrapped.shelf[a[0][0][0]], a[0][0][1]
+action[i] = float(input(f'{v}: {event.name} -> {event.other_vessel}| '))
 
 
 while not d:
     action = np.clip(action,0,1)
+    env.unwrapped.shelf
     o, r, d, *_ = env.step(action)
     total_reward += r
     time.sleep(0.1)
@@ -90,4 +94,5 @@ while not d:
     plt.imshow(rgb)
     plt.axis("off")
     plt.show()
+    
 
