@@ -11,7 +11,7 @@ from chemistrylab.util import Visualization
 
 import numpy as np
 from IPython.display import display,clear_output,JSON
-from gym.envs.registration import register
+# from gym.envs.registration import register
 
 
 name = "Contact Process"
@@ -52,8 +52,8 @@ print("After Reaction:\n", v.get_material_dataframe())
 print("\n".join([ a for a in gym.registry.keys() if "React" in a or "Extract" in a or "Distill" in a]))
 
 #put filepath accordingly
-info.dump_to_json("/Users/agam/CS238/Final_Project/chemgymrl/chemistrylab/reactions/available_reactions/contact.json")
-json_text = "".join(line for line in open("/Users/agam/CS238/Final_Project/chemgymrl/chemistrylab/reactions/available_reactions/contact.json","r"))
+info.dump_to_json("chemgymrl/chemistrylab/reactions/available_reactions/contact.json")
+json_text = "".join(line for line in open("chemgymrl/chemistrylab/reactions/available_reactions/contact.json","r"))
 print(json_text)
 
 
@@ -70,11 +70,14 @@ plt.show()
 d = False
 state = env.reset()
 total_reward = 0
+action = np.ones(env.unwrapped.action_space.shape[0])
+print(f'Target: {env.unwrapped.target_material}')
+for i, a in enumerate(env.unwrapped.actions):
+    # print("Action data (i, a): ", i, a)
 
-action = np.ones(env.action_space.shape[0])
-print(f'Target: {env.target_material}')
-for i, a in enumerate(env.actions):
-    v,event = env.shelf[a[0][0][0]],a[0][0][1]
+    # Extract vessel and event for this action
+    v,event = env.unwrapped.shelf[a[0][0][0]],a[0][0][1]
+    # print(v, event, a[1])
     action[i] = float(input(f'{v}: {event.name} -> {event.other_vessel}| '))
 
 

@@ -123,9 +123,9 @@ class ContactProcessReact_v0(GenBench):
         
         # Setting up the shelf with SO2, O2, and a vessel for the reaction
         shelf = Shelf([
-            get_mat("SO2", 2, "SO2 Vessel"),  # Assuming starting with 2 moles of SO2
-            get_mat("O2", 1, "O2 Vessel"),    # Assuming starting with 1 mole of O2
-            get_mat("SO3", 0, "SO3 Vessel")   # Initially, SO3 is not present
+            get_mat("SO3", 0, "Reaction Vessel"),   # Initially, SO3 is not present
+            get_mat("SO2", 2),  # Assuming starting with 2 moles of SO2
+            get_mat("O2", 1),    # Assuming starting with 1 mole of O2
         ])
 
         """
@@ -141,8 +141,8 @@ class ContactProcessReact_v0(GenBench):
         # Defining actions for the Contact Process
         actions = [
             #Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',     [0],  0.01,  False),
-            Action([0],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False),
-            Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False),
+            Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour SO2
+            Action([2],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour O2
         ]
 
         # Reaction information for the Contact Process
