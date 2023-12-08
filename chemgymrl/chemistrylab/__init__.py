@@ -88,7 +88,6 @@ register(
 register(
     id='FictReactDemo-v0',
     entry_point='chemistrylab.benches.reaction_bench:FictReactDemo_v0',
-
 )
 
 register(
