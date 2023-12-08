@@ -152,7 +152,7 @@ class ContactProcessReact_v0(GenBench):
         super(ContactProcessReact_v0, self).__init__(
             shelf,
             actions,
-            ["PVT", "spectra", "targets", "layers"],
+            ["PVT", "spectra", "targets"],
             targets=react_info.PRODUCTS,
             default_events=(Event("react", (Reaction(react_info),), None),),
             reward_function=r_rew,
