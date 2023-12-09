@@ -115,13 +115,8 @@ class ContactProcessReact_v0(GenBench):
     """
 
     metadata = {
-<<<<<<< HEAD
-        "render_modes": ["rgb_array"], #could make this "human" 
-        "render_fps": 10,
-=======
         "render_modes": ["rgb_array"],
         "render_fps": 60,
->>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
     }
     def __init__(self):
         r_rew = RewardGenerator(use_purity=False, exclude_solvents=False, include_dissolved=False)
@@ -129,15 +124,9 @@ class ContactProcessReact_v0(GenBench):
         v.default_dt=0.0008
         # Setting up the shelf with SO2, O2, and a vessel for the reaction
         shelf = Shelf([
-<<<<<<< HEAD
-            get_mat("SO2", 2, "Reaction Vessel"),  # Assuming starting with 2 moles of SO2
-            get_mat("O2", 1),    # Assuming starting with 1 mole of O2
-            get_mat("SO3", 0)   # Initially, SO3 is not present
-=======
             v,   # Initially, SO3 is not present
             get_mat("SO2", 2),  # Assuming starting with 2 moles of SO2
             get_mat("O2", 1),    # Assuming starting with 1 mole of O2
->>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
         ])
 
         """
@@ -152,15 +141,9 @@ class ContactProcessReact_v0(GenBench):
 
         # Defining actions for the Contact Process
         actions = [
-<<<<<<< HEAD
-            #Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',     [0],  0.01,  False),
-            Action([0],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   True),
-            Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   True),
-=======
             Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',    [0],  0.01,  False),
             Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour SO2
             Action([2],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour O2
->>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
         ]
 
         targets = ["SO2"]

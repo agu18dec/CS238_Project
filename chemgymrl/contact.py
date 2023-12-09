@@ -76,20 +76,10 @@ print(f'Target: {env.unwrapped.target_material}')
 for i, a in enumerate(env.unwrapped.actions):
     # print("Action data (i, a): ", i, a)
 
-<<<<<<< HEAD
-print(env.action_space.shape[0])
-action = np.ones(env.action_space.shape[0])
-print(f'Target: {env.unwrapped.target_material}')
-for i, a in enumerate(env.unwrapped.actions):
-    i, a = env.unwrapped.actions
-    v,event = env.unwrapped.shelf[a[0][0][0]], a[0][0][1]
-action[i] = float(input(f'{v}: {event.name} -> {event.other_vessel}| '))
-=======
     # Extract vessel and event for this action
     v,event = env.unwrapped.shelf[a[0][0][0]],a[0][0][1]
     # print(v, event, a[1])
     action[i] = float(input(f'{v}: {event.name} -> {event.other_vessel}| '))
->>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
 
 
 while not d:
