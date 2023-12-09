@@ -1181,7 +1181,11 @@ class SO2(Material): #Initialize to correct values
             boiling_point=263.0,  # Kelvin
             solute=True,  # Typically not considered a solute in standard conditions
             specific_heat=0.622,  # J/g*K
+<<<<<<< HEAD
             enthalpy_vapor=24900,  # Not typically required for gases
+=======
+            enthalpy_vapor=43000.0,  # Not typically required for gases NOTE: WHEN I INCREASE THE TEMP, IT USES THIS VAL. SO IG ITS REQUIRED. If its none i get an error
+>>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
             index=2  # Unique index for identification
         )
 

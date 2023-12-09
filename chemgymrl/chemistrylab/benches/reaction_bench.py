@@ -68,7 +68,7 @@ class GeneralWurtzReact_v2(GenBench):
             default_events = (Event("react", (Reaction(react_info),), None),),
             reward_function=r_rew,
             discrete=False,
-            max_steps=20
+            max_steps=100
         )
         
 class GeneralWurtzReact_v0(GenBench):
@@ -115,17 +115,29 @@ class ContactProcessReact_v0(GenBench):
     """
 
     metadata = {
+<<<<<<< HEAD
         "render_modes": ["rgb_array"], #could make this "human" 
         "render_fps": 10,
+=======
+        "render_modes": ["rgb_array"],
+        "render_fps": 60,
+>>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
     }
     def __init__(self):
         r_rew = RewardGenerator(use_purity=False, exclude_solvents=False, include_dissolved=False)
-        
+        v = get_mat("SO3", .000001,"Reaction Vessel") # very low initial amount to avoid divide by zero problems
+        v.default_dt=0.0008
         # Setting up the shelf with SO2, O2, and a vessel for the reaction
         shelf = Shelf([
+<<<<<<< HEAD
             get_mat("SO2", 2, "Reaction Vessel"),  # Assuming starting with 2 moles of SO2
             get_mat("O2", 1),    # Assuming starting with 1 mole of O2
             get_mat("SO3", 0)   # Initially, SO3 is not present
+=======
+            v,   # Initially, SO3 is not present
+            get_mat("SO2", 2),  # Assuming starting with 2 moles of SO2
+            get_mat("O2", 1),    # Assuming starting with 1 mole of O2
+>>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
         ])
 
         """
@@ -140,25 +152,47 @@ class ContactProcessReact_v0(GenBench):
 
         # Defining actions for the Contact Process
         actions = [
+<<<<<<< HEAD
             #Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',     [0],  0.01,  False),
             Action([0],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   True),
             Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   True),
+=======
+            Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',    [0],  0.01,  False),
+            Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour SO2
+            Action([2],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False), # Pour O2
+>>>>>>> 55b4f67c11cde582a8e493a0f85e253d608e5791
         ]
 
+        targets = ["SO2"]
         # Reaction information for the Contact Process
         react_info = ReactInfo.from_json(REACTION_PATH+"/contact.json")
-        
         # Initialize the bench with the shelf, actions, and reaction information
         super(ContactProcessReact_v0, self).__init__(
             shelf,
             actions,
             ["PVT", "spectra", "targets"],
-            targets=react_info.PRODUCTS,
+            targets=targets,
             default_events=(Event("react", (Reaction(react_info),), None),),
             reward_function=r_rew,
             discrete=False,
-            max_steps=20
+            max_steps=500
         )
+    def get_keys_to_action(self):
+        # Control with the numpad or number keys.
+        keys = dict()
+        keys["1"] = np.array([1,0,0])
+        keys["2"] = np.array([0,1,0])
+        keys["3"] = np.array([0,0,1])
+        keys["12"] = np.array([1,1,0])
+        keys["13"] = np.array([1,0,1])
+        keys["23"] = np.array([0,1,1])
+        keys["123"] = np.array([1,1,1])
+        # for i in range(3): # 0, 1, 2
+        #     arr=np.zeros(3)
+        #     arr[i]=1    
+        #     keys[str(i+1)] = arr
+        # keys[()] = np.zeros(3)
+        return keys
 
 class FictReact_v2(GenBench):
     """
