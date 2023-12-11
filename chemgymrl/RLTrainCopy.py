@@ -29,6 +29,9 @@ Example call:
 :history: 22-01-2023
 """
 
+##############################################################################################################################
+# python3 chemgymrl/RLTrainCopy.py environment=ContactProcess policy=MultiInputPolicy steps= 512000
+##############################################################################################################################
 
 import json,os
 
@@ -259,8 +262,6 @@ if __name__=="__main__":
             all_eps_rewards=[]
             best_return = -1e10
 
-            print("HERE IS THE MODEL EP INFO BUFFer")
-            print(model.ep_info_buffer)
             for i in range(epoch):
                 #collect experience
                 if is_on_policy:
@@ -270,8 +271,8 @@ if __name__=="__main__":
                         n_rollout_steps=op.n_steps,
                         callback=callback
                     ) # THIS IS THE FUNCTION WHERE IM HAVING THE PROBLEM
-                    print("INSIDE IS_ON_POLICY:", model.ep_info_buffer)
-                    print(model.rollout_buffer.observations.shape)
+                    # print("INSIDE IS_ON_POLICY:", model.ep_info_buffer)
+                    # print(model.rollout_buffer.observations.shape)
                     
                 else:
                     #collect experience
@@ -283,15 +284,15 @@ if __name__=="__main__":
                         learning_starts=model.learning_starts,
                         replay_buffer=model.replay_buffer,
                     )
-                print("HERE IS THE MODEL EP INFO BUFFer AFTERWARDS")
-                print(model.ep_info_buffer)
+                # print("HERE IS THE MODEL EP INFO BUFFer AFTERWARDS")
+                # print(model.ep_info_buffer)
 
                 rate=model.__dict__.get("exploration_rate",None)
                         
                 print("BEST:",max_return,"| Explore: ",rate)
-                print("STARTING EP_INFO")
-                for ep_info in model.ep_info_buffer:
-                    print(ep_info["r"])
+                # print("STARTING EP_INFO")
+                # for ep_info in model.ep_info_buffer:
+                #     print(ep_info["r"])
                 #log info on returns
                 if (len(model.ep_info_buffer) > 0):
                     returns = np.array([ep_info["r"] for ep_info in model.ep_info_buffer])
@@ -321,7 +322,7 @@ if __name__=="__main__":
             model.learn(total_timesteps=op.steps)
             
     except Exception as e: print(e);1/0
-    
+    print(model)
     model.save(op.dir+"\\model")
 
     #Clean up the logging

@@ -564,12 +564,12 @@ class ContactProcess(gym.Env):
     def pour(self, source, dest, amount, chemical):
         # If the agent tries to move too much, move all you can and reward -100
         if self.shelf[source].material_dict[chemical].mol < amount:
-            print(f"Transferring {self.shelf[source].material_dict[chemical].mol} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
+            # print(f"Transferring {self.shelf[source].material_dict[chemical].mol} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
             self.shelf[dest].material_dict[chemical].mol += self.shelf[source].material_dict[chemical].mol
             self.shelf[source].material_dict[chemical].mol = 0
             return -100.0
         
-        print(f"Transferring {amount} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
+        # print(f"Transferring {amount} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
         #else, move the requested amount and reward -.0001
         self.shelf[source].material_dict[chemical].mol -= amount
         self.shelf[dest].material_dict[chemical].mol += amount
