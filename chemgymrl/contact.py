@@ -19,7 +19,7 @@ REACTANTS = ["SO2", "O2"]
 PRODUCTS = ["SO3"]
 MATERIALS = ["SO2", "O2", "SO3"]
 
-pre_exp_arr = np.array([55.34,1e-14])*1e7 #placeholder
+pre_exp_arr = np.array([55.34, 1e-14])*1e7 #placeholder
 activ_energy_arr = np.array([1.0,1.0]) #placeholder
 
 #of the form [reaction, reactants] setting stoichiometric coefficients
@@ -32,11 +32,16 @@ stoich_coeff_arr = np.array([
 conc_coeff_arr = np.array([
     [-2, 2], #SO2
     [-1, 1], #O2
-    [2, -2]#[2, -2] #SO3
+    [2, -2] #SO3
 ]).astype(np.float32)
+
 
 info = ReactInfo(name,REACTANTS,PRODUCTS,[],MATERIALS,pre_exp_arr,activ_energy_arr,stoich_coeff_arr, conc_coeff_arr)
 
+#put filepath accordingly
+info.dump_to_json("chemgymrl/chemistrylab/reactions/available_reactions/contact.json")
+json_text = "".join(line for line in open("chemgymrl/chemistrylab/reactions/available_reactions/contact.json","r"))
+print(json_text)
 #2So2 + 02 --> 2SO3 (reversible)
 reaction = Reaction(info)
 v = vessel.Vessel("Contact Process Vessel")
@@ -49,12 +54,9 @@ print("Before Reaction:\n", v.get_material_dataframe())
 
 reaction.update_concentrations(v)
 print("After Reaction:\n", v.get_material_dataframe())
-print("\n".join([ a for a in gym.registry.keys() if "React" in a or "Extract" in a or "Distill" in a]))
+# print("\n".join([ a for a in gym.registry.keys() if "React" in a or "Extract" in a or "Distill" in a]))
 
-#put filepath accordingly
-info.dump_to_json("chemgymrl/chemistrylab/reactions/available_reactions/contact.json")
-json_text = "".join(line for line in open("chemgymrl/chemistrylab/reactions/available_reactions/contact.json","r"))
-print(json_text)
+
 
 
 env = gym.make('ContactProcessReact-v0')
@@ -69,12 +71,10 @@ plt.axis("off")
 # Chemicals -> discretized via 0 being no reagents added, 1 being all added, with negative reward if more than available is added
 d = False
 state = env.reset()
-print(state)
 total_reward = 0
 action = np.ones(env.unwrapped.action_space.shape[0])
 print(f'Target: {env.unwrapped.target_material}')
 for i, a in enumerate(env.unwrapped.actions):
-    # print("Action data (i, a): ", i, a)
 
     # Extract vessel and event for this action
     v,event = env.unwrapped.shelf[a[0][0][0]],a[0][0][1]
@@ -85,15 +85,17 @@ for i, a in enumerate(env.unwrapped.actions):
 while not d:
     action = np.clip(action,0,1)
     env.unwrapped.shelf
+    print(env.unwrapped.shelf[0].get_material_dataframe())
+    print(env.unwrapped.shelf[1].get_material_dataframe())
     o, r, d, *_ = env.step(action)
     total_reward += r
     time.sleep(0.1)
     clear_output(wait=True)
     print(f'reward: {r}')
     print(f'total_reward: {total_reward}')
-    rgb = env.render()
-    plt.imshow(rgb)
-    plt.axis("off")
-    plt.show()
+    # rgb = env.render()
+    # plt.imshow(rgb)
+    # plt.axis("off")
+    # plt.show()
     
 

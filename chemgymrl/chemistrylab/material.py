@@ -1162,6 +1162,45 @@ class HCl(Material):
             enthalpy_vapor=31940,
             index=28
         )
+class C6H12O6(Material):
+    def __init__(self, mol=0):
+        super().__init__(
+            mol=mol,
+            name='C6H12O6',
+            density={'s': 1.56, 'l': None, 'g': None},
+            polarity=abs(2 * 1.24 * np.cos((109.5 / 2) * (np.pi / 180.0))),
+            temperature=298,
+            pressure=1,
+            phase='s',
+            molar_mass=180.156,
+            color=0.0,
+            charge=0.0,
+            boiling_point=1000,
+            solute=True,
+            specific_heat=4.0,
+            enthalpy_vapor=40650.0,
+            index=50
+        )
+# NOTE: NEED TO UPDATE THESE VALUES
+class CO2(Material):
+    def __init__(self, mol=0):
+        super().__init__(
+            mol=mol,
+            name='CO2',
+            density={'s': 1.56, 'l': None, 'g': None},
+            polarity=abs(2 * 1.24 * np.cos((109.5 / 2) * (np.pi / 180.0))),
+            temperature=298,
+            pressure=1,
+            phase='s',
+            molar_mass=180.156,
+            color=0.0,
+            charge=0.0,
+            boiling_point=194.7,
+            solute=True,
+            specific_heat=4.0,
+            enthalpy_vapor=40650.0,
+            index=51
+        )       
 
 ##-------Contact Process-------##
 
@@ -1182,7 +1221,7 @@ class SO2(Material): #Initialize to correct values
             solute=True,  # Typically not considered a solute in standard conditions
             specific_heat=0.622,  # J/g*K
             enthalpy_vapor=24900,  # Not typically required for gases
-            index=2  # Unique index for identification
+            index=39  # Unique index for identification
         )
 
 class SO3(Material): #Initialize to correct values
@@ -1202,7 +1241,7 @@ class SO3(Material): #Initialize to correct values
             solute=True,  # Can be a solute in some conditions
             specific_heat=0.71,  # J/g*K
             enthalpy_vapor=43000.0,  # J/mol
-            index=4  # Unique index for identification
+            index=40  # Unique index for identification
         )
 
 

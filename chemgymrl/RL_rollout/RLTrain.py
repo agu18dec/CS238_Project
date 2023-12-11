@@ -49,6 +49,7 @@ class Opt:
                  #best_episodes=200,best_ratio=0.2)
     def __init__(self,**kwargs):
         self.__dict__.update(Opt.DEFAULTS)
+        print(kwargs)
         self.__dict__.update(kwargs)
 
     def __str__(self):
@@ -292,7 +293,6 @@ if __name__=="__main__":
                 rate=model.__dict__.get("exploration_rate",None)
                         
                 print("BEST:",max_return,"| Explore: ",rate)
-
                 #log info on returns
                 returns = np.array([ep_info["r"] for ep_info in model.ep_info_buffer])
                 #recalculate the max return (new episodes are going to be in the returns array)
