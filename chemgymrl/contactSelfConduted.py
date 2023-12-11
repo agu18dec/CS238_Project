@@ -41,105 +41,42 @@ info = ReactInfo(name,REACTANTS,PRODUCTS,[],MATERIALS,pre_exp_arr,activ_energy_a
 info.dump_to_json("chemgymrl/chemistrylab/reactions/available_reactions/contact.json")
 json_text = "".join(line for line in open("chemgymrl/chemistrylab/reactions/available_reactions/contact.json","r"))
 
-    
-#2So2 + 02 --> 2SO3 (reversible)
-
-# molsSO2 = 2
-# molsO2 = 1
-# molsSO2Used = 0
-# molsO2Used = 0
-# SO2perCycle = 0.5
-# O2perCycle = 0.5
-# done = False
-# SO2_material = material.SO2(mol=molsSO2) 
-# O2_material = material.O2(mol=molsO2) 
-# SO3_material = material.SO3(mol=0.000001)  
-# reaction = Reaction(info)
-# noSO2 = material.SO2(mol=0)
-# noO2 = material.O2(mol=0)
-# v0 = vessel.Vessel("Contact Process Vessel")
-# v0.material_dict = {SO3_material._name: SO3_material, SO2_material._name: noSO2, O2_material._name: noO2}
-# v1 = vessel.Vessel("SO2 Vessel")
-# v1.material_dict = {SO2_material._name: SO2_material}
-# v2 = vessel.Vessel("O2 Vessel")
-# v2.material_dict = {O2_material._name: O2_material}
-# v0.default_dt = 0.1
-# print("Before Reaction:\n", v0.get_material_dataframe())
-# #NOTE: THIS CURRENTLY DOESNT HANDLE THE CASE WHERE THE REACTANTS PER CYCLE DOESNT ADD UP TO THE TOTAL REACTANTS
-
-# while not done:
-#     productBefore = v0.material_dict[SO3_material._name].mol
-#     if (molsSO2Used < molsSO2):
-#         v0.material_dict[SO2_material._name].mol += SO2perCycle
-#         molsSO2Used += SO2perCycle
-#     if (molsO2Used < molsO2):
-#         v0.material_dict[O2_material._name].mol += O2perCycle
-#         molsO2Used += O2perCycle
-#     reaction.update_concentrations(v0)
-#     print("After Reaction:\n", v0.get_material_dataframe())
-#     productAfter = v0.material_dict[SO3_material._name].mol
-#     if (productAfter > productBefore - .0001 and productAfter < productBefore + .0001):
-#         done = True
-
-
 ##############################################################################################################
-# RETYPING TRYING TO USE GYMNASIUM
+# TRYING TO USE GYMNASIUM
+
+def printData(env):
+    print(f"REACTANT: {env.unwrapped.shelf[0].get_material_dataframe()}")
+    print(f"SO2 VESSEL: {env.unwrapped.shelf[1].get_material_dataframe()}")
+    print(f"O2 VESSEL: {env.unwrapped.shelf[2].get_material_dataframe()}")
+    print(f"PRODUCT VESSEL: {env.unwrapped.shelf[3].get_material_dataframe()}")
+
 env = gym.make('ContactProcess')
-print(env.reset())
-# rgb = env.render()
-print(f"PRODUCT VESSEL: {env.unwrapped.shelf[0].get_material_dataframe()}")
-print(f"SO2 VESSEL: {env.unwrapped.shelf[1].get_material_dataframe()}")
-print(f"O2 VESSEL: {env.unwrapped.shelf[2].get_material_dataframe()}")
+env.reset()
+printData(env)
 print(f"Target Material: {env.unwrapped.target_material}")
 total_reward = 0
-action = np.ones((3))
+action = np.zeros((37)) #[heat, 12 different options of moving contents from one vessel to another, then material to be moved]
+# action = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,1])
+action[34] = .1 # making the action be to move the contents of the O2 vessel to the rxn vessel
+action[19] = .2 # making the action be to move the contents of the SO2 vessel to the rxn vessel
+# action = np.zeros((37)) 
+#NOTE: moving contents from the SO2 vessel to the rxn vessel is 
 print(action)
-# molsSO2 = 2
-# molsO2 = 1
-# molsSO2Used = 0
-# molsO2Used = 0
-# SO2perCycle = 0.5
-# O2perCycle = 0.5
 done = False
-# SO2_material = material.SO2(mol=molsSO2) 
-# O2_material = material.O2(mol=molsO2) 
-# SO3_material = material.SO3(mol=0.000001)  
-# reaction = Reaction(info)
-# noSO2 = material.SO2(mol=0)
-# noO2 = material.O2(mol=0)
-# v0 = vessel.Vessel("Contact Process Vessel")
-# v0.material_dict = {SO3_material._name: SO3_material, SO2_material._name: noSO2, O2_material._name: noO2}
-# v1 = vessel.Vessel("SO2 Vessel")
-# v1.material_dict = {SO2_material._name: SO2_material}
-# v2 = vessel.Vessel("O2 Vessel")
-# v2.material_dict = {O2_material._name: O2_material}
-# v0.default_dt = 0.1
-# print("Before Reaction:\n", v0.get_material_dataframe())
-#NOTE: THIS CURRENTLY DOESNT HANDLE THE CASE WHERE THE REACTANTS PER CYCLE DOESNT ADD UP TO THE TOTAL REACTANTS
-# i = 0
+i = 0
 while not done:
     o, r, done, _, info = env.step(action)
     total_reward += r
-    print(f"PRODUCT VESSEL: {env.unwrapped.shelf[0].get_material_dataframe()}")
-    print(f"SO2 VESSEL: {env.unwrapped.shelf[1].get_material_dataframe()}")
-    print(f"O2 VESSEL: {env.unwrapped.shelf[2].get_material_dataframe()}")
+    printData(env)
     print("reward: ", r)
     print("total_reward: ", total_reward)
-    # if i > 20:
+    # if (i == 1):
+    #     action = np.zeros((37))
+
+    # if i > 10:
     #     break
-    # i += 1
-    # productBefore = v0.material_dict[SO3_material._name].mol
-    # if (molsSO2Used < molsSO2):
-    #     v0.material_dict[SO2_material._name].mol += SO2perCycle
-    #     molsSO2Used += SO2perCycle
-    # if (molsO2Used < molsO2):
-    #     v0.material_dict[O2_material._name].mol += O2perCycle
-    #     molsO2Used += O2perCycle
-    # reaction.update_concentrations(v0)
-    # print("After Reaction:\n", v0.get_material_dataframe())
-    # productAfter = v0.material_dict[SO3_material._name].mol
-    # if (productAfter > productBefore - .0001 and productAfter < productBefore + .0001):
-    #     done = True
+    i+=1 
+print(f"Function ended on iteration {i}")
 
 
 

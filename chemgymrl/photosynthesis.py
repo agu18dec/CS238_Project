@@ -57,7 +57,7 @@ while not d:
     o, r, d, *_ = env.step(action)
     total_reward += r
     time.sleep(0.1)
-    # clear_output(wait=True)
+    clear_output(wait=True)
     print(f'reward: {r}')
     print(f'total_reward: {total_reward}')
     # rgb = env.render()
