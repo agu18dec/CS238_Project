@@ -478,8 +478,6 @@ class ContactProcess(gym.Env):
         terminated = False
         if (self.product > self.previous_product - .0001 and self.product < self.previous_product + .0001 and self.shelf[1].material_dict["SO2"].mol < .0001 and self.shelf[2].material_dict["O2"].mol < .0001):
             terminated = True
-        if (self.currStep > self.max_steps):
-            terminated = True
         reward = self.default_reward(self.shelf,self.target_material) if terminated else 0
         self.previous_product = self.product
         # NOTE: CURRENTLY FOR MY REWARD, IM RETURNING -.1 FOR EACH ITERATION BECAUSE WE DON'T WANT IT TO BE REALLY SLOW            

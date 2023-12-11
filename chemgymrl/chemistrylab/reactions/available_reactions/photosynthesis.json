@@ -1,0 +1,26 @@
+{
+  "name": "photosynthesis",
+  "REACTANTS": [
+    "CO2",
+    "H2O"
+  ],
+  "PRODUCTS": [
+    "C6H12O6",
+    "O2"
+  ],
+  "SOLVENTS": [
+    "H2O"
+  ],
+  "MATERIALS": [
+    "CO2",
+    "H2O",
+    "C6H12O6",
+    "O2"
+  ],
+  "pre_exp_arr": [1.0],  
+   "activ_energy_arr": [1.0],   
+   "stoich_coeff_arr": [
+    [ 6.0, 6.0 ]
+  ],
+  "conc_coeff_arr": [    [ -6.0,     -6.0, 1.0, 6.0]  ]
+}
