@@ -56,7 +56,7 @@ printData(env)
 print(f"Target Material: {env.unwrapped.target_material}")
 total_reward = 0
 action = np.zeros((37)) #[heat, 12 different options of moving contents from one vessel to another, then material to be moved]
-# action = np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,1])
+
 action[34] = .1 # making the action be to move the contents of the O2 vessel to the rxn vessel
 action[19] = .2 # making the action be to move the contents of the SO2 vessel to the rxn vessel
 # action = np.zeros((37)) 

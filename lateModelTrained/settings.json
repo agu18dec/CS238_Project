@@ -1,0 +1,11 @@
+{
+    "policy": "MultiInputPolicy",
+    "algorithm": "A2C",
+    "environment": "ContactProcess",
+    "steps": 1024000,
+    "dir": "RLMODELS\\ContactProcess\\A2C\\11-12-2023--16-01-17",
+    "n_steps": 256,
+    "n_envs": 1,
+    "seed": null,
+    "dummy_vec": false
+}

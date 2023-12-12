@@ -30,7 +30,7 @@ Example call:
 """
 
 ##############################################################################################################################
-# python3 chemgymrl/RLTrainCopy.py environment=ContactProcess policy=MultiInputPolicy steps= 512000
+# python3 chemgymrl/RLTrainCopy.py environment=ContactProcess policy=MultiInputPolicy steps=12000
 ##############################################################################################################################
 
 import json,os
@@ -55,22 +55,16 @@ class Opt:
         print(kwargs)
         self.__dict__.update(kwargs)
 
-    def __str__(self):
-        out=""
-        for key in self.__dict__:
-            line=key+" "*(30-len(key))+ "\t"*3+str(self.__dict__[key])
-            out+=line+"\n"
-        return out
-    def cmd(self):
-        """Returns a string with command line arguments corresponding to the options
-            Outputs:
-                out (str) - a single string of space-separated command line arguments
-        """
-        out=""
-        for key in self.__dict__:
-            line=key+"="+str(self.__dict__[key])
-            out+=line+" "
-        return out[:-1]
+    # def cmd(self):
+    #     """Returns a string with command line arguments corresponding to the options
+    #         Outputs:
+    #             out (str) - a single string of space-separated command line arguments
+    #     """
+    #     out=""
+    #     for key in self.__dict__:
+    #         line=key+"="+str(self.__dict__[key])
+    #         out+=line+" "
+    #     return out[:-1]
     
     def apply(self,args):
         """Takes in a tuple of command line arguments and turns them into options
@@ -101,20 +95,6 @@ class Opt:
             x=int(x0)
         except:return x
         return x
-    def from_file(self,fn):
-        """Depricated: Takes files formatted in the __str__ format and turns them into a set of options
-        Instead of using this, consider using save() and load() functions. 
-        """
-        kwargs = dict()
-        with open(fn,"r") as f:
-          for line in f:
-            line=line.strip()
-            split = line.split("\t")
-            key,val = split[0].strip(),split[-1].strip()
-            try:
-                kwargs[key]=self.cmd_cast(val)
-            except:pass
-        self.__dict__.update(kwargs)
         
     def save(self,fn):
         """Saves the options in json format
@@ -231,7 +211,7 @@ if __name__=="__main__":
     
     model_class = ALGO[op.algorithm]
     
-    is_on_policy = issubclass(model_class,OnPolicyAlgorithm)
+    is_on_policy = issubclass(model_class,OnPolicyAlgorithm) # If it is online learning
     
     if op.n_steps>0:
         #initialize model
@@ -254,27 +234,23 @@ if __name__=="__main__":
     #Keep track of the best episode return
     max_return=-1e10
     print(model)
-    
     try:
         if op.n_steps>0:
             _, callback = model._setup_learn(total_timesteps=op.steps*op.n_envs)
             epoch=op.steps//op.n_steps
-            all_eps_rewards=[]
-            best_return = -1e10
+            best_mean = -1e10
 
             for i in range(epoch):
                 #collect experience
-                if is_on_policy:
+                if is_on_policy: #if its an online policy
                     rollout = model.collect_rollouts(
                         env=env,
                         rollout_buffer=model.rollout_buffer,
                         n_rollout_steps=op.n_steps,
                         callback=callback
                     ) # THIS IS THE FUNCTION WHERE IM HAVING THE PROBLEM
-                    # print("INSIDE IS_ON_POLICY:", model.ep_info_buffer)
-                    # print(model.rollout_buffer.observations.shape)
                     
-                else:
+                else: #if its an offline policy
                     #collect experience
                     rollout = model.collect_rollouts(
                         env=env,
@@ -284,32 +260,28 @@ if __name__=="__main__":
                         learning_starts=model.learning_starts,
                         replay_buffer=model.replay_buffer,
                     )
-                # print("HERE IS THE MODEL EP INFO BUFFer AFTERWARDS")
-                # print(model.ep_info_buffer)
 
                 rate=model.__dict__.get("exploration_rate",None)
                         
                 print("BEST:",max_return,"| Explore: ",rate)
-                # print("STARTING EP_INFO")
-                # for ep_info in model.ep_info_buffer:
-                #     print(ep_info["r"])
                 #log info on returns
                 if (len(model.ep_info_buffer) > 0):
                     returns = np.array([ep_info["r"] for ep_info in model.ep_info_buffer])
                 else: returns = np.array([-1e10])
-                # print("RETURN IS:", returns)
-                # print("Max return is:",max_return)
+                # print("Here are the returns:",returns)
                 #recalculate the max return (new episodes are going to be in the returns array)
-                max_return=max(max_return,np.max(returns))
-                #Only look at the last 100 returns to see if this is a best policy
-                returns=returns[-100:]
-                print("Mean Return:",returns.mean(),"| nsamples:",returns.shape,"| Progress:",i,"/",epoch)
-                all_eps_rewards+=[returns.mean()]
-                
-                if returns.mean()>best_return:
-                    best_return = returns.mean()
+                currMax = np.max(returns)
+                if currMax > max_return:
+                    print(currMax,"is better than",max_return)
+                    max_return = currMax
                     model.save(op.dir+"\\best_model")
                     print("Saving New best Model. . .")
+                #Only look at the last 100 returns to see if this is a best policy
+                returns=returns[-100:]
+                currMean = np.mean(returns)
+                print("Mean Return:",currMean,"| nsamples:",returns.shape,"| Progress:",i,"/",epoch)
+                best_mean = max(best_mean, currMean)
+                    
                 sys.stdout.flush()
                 
                 #This is done AFTER best_model is saved to make sure it didn't get worse from training

@@ -1,0 +1,11 @@
+{
+    "policy": "MultiInputPolicy",
+    "algorithm": "PPO",
+    "environment": "ContactProcess",
+    "steps": 601600,
+    "dir": "RLMODELS\\ContactProcess\\PPO\\11-12-2023--00-31-38",
+    "n_steps": 256,
+    "n_envs": 1,
+    "seed": null,
+    "dummy_vec": false
+}

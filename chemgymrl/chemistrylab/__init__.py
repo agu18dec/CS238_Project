@@ -101,10 +101,6 @@ register(
     entry_point='chemistrylab.benches.extract_bench:SeparateTest_v0',
 )
 register(
-    id='Photosynthesis-v0',
-    entry_point='chemistrylab.benches.reaction_bench:Photosynthesis_v0',
-)
-register(
     id='ContactProcess',
     entry_point='chemistrylab.benches.reaction_bench:ContactProcess',
 )

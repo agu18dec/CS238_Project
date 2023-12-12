@@ -1,0 +1,41 @@
+The action space is Box([-500.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+    0.], [500.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.
+   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.
+   2.   2.   2.   2.   2.   2.   2.   2.   2.], (37,), float32)
+The observation space is Dict('O2': Box(0.0, 2.0, (4,), float32), 'SO2': Box(0.0, 2.0, (4,), float32), 'SO3': Box(0.0, 2.0, (4,), float32))
+Using cpu device
+<stable_baselines3.a2c.a2c.A2C object at 0x2a1b62450>
+BEST: -10000000000.0 | Explore:  None
+-695.836851 is better than -10000000000.0
+Saving New best Model. . .
+Mean Return: -827.2911595555556 | nsamples: (9,) | Progress: 0 / 4000
+BEST: -695.836851 | Explore:  None
+-281.85786 is better than -695.836851
+Saving New best Model. . .
+Mean Return: -757.3924707142857 | nsamples: (21,) | Progress: 1 / 4000
+BEST: -281.85786 | Explore:  None
+Mean Return: -772.3978556000001 | nsamples: (30,) | Progress: 2 / 4000
+BEST: -281.85786 | Explore:  None
+-179.429618 is better than -281.85786
+Saving New best Model. . .
+Mean Return: -776.355166775 | nsamples: (40,) | Progress: 3 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -780.0480664509804 | nsamples: (51,) | Progress: 4 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -779.3830944754098 | nsamples: (61,) | Progress: 5 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -779.8773336056337 | nsamples: (71,) | Progress: 6 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -786.9367655679013 | nsamples: (81,) | Progress: 7 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -792.0217134555556 | nsamples: (90,) | Progress: 8 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -794.7848549900002 | nsamples: (100,) | Progress: 9 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -787.58381729 | nsamples: (100,) | Progress: 10 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -787.3929597399998 | nsamples: (100,) | Progress: 11 / 4000
+BEST: -179.429618 | Explore:  None
+Mean Return: -785.71843541 | nsamples: (100,) | Progress: 12 / 4000

@@ -331,40 +331,6 @@ class FictReactDemo_v0(GenBench):
         keys[()] = np.zeros(5)
         return keys
 
-class Photosynthesis_v0(GenBench):
-    """
-    Class to define an environment which performs a Wurtz extraction on materials in a vessel.
-    """
-
-    metadata = {
-        "render_modes": ["rgb_array"],
-        "render_fps": 10,
-    }
-    def __init__(self):
-        r_rew = RewardGenerator(use_purity=False,exclude_solvents=False,include_dissolved=False)
-        shelf = Shelf([
-            get_mat("C6H12O6",.0001,"Reaction Vessel"),
-            get_mat("H2O",6),
-            get_mat("CO2",6),
-        ])
-        actions = [
-            Action([0],    [ContinuousParam(156,307,0,(500,))],  'heat contact',   [0],  0.01,  False),
-            Action([1],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False),
-            Action([2],    [ContinuousParam(0,1,1e-3,())],      'pour by percent',  [0],   0.01,   False),
-        ]
-
-        react_info = ReactInfo.from_json(REACTION_PATH+"/photosynthesis.json")
-        
-        super(Photosynthesis_v0, self).__init__(
-            shelf,
-            actions,
-            ["PVT","spectra","targets"],
-            targets=["C6H12O6"],
-            default_events = (Event("react", (Reaction(react_info),), None),),
-            reward_function=r_rew,
-            discrete=False,
-            max_steps=20
-        )
 
  ############################################################################################################       
 
@@ -384,11 +350,11 @@ class ContactProcess(gym.Env):
         self.default_dt=0.01
         self.shelf = self.make_shelf()
         self.previous_shelf = None
-
+        self.verbose = False
        
         self.chems = ["SO3", "SO2", "O2"]
         self.target_material = "SO3"
-        self.max_steps = 500
+        self.max_steps = 25
         self.currStep = 0
         
         # Observations are dictionaries with the agent's and the target's location.
@@ -400,8 +366,6 @@ class ContactProcess(gym.Env):
                 "O2": spaces.Box(0,2,(4,), dtype=np.float32),
             }
         )
-        self.product = 0
-        self.previous_product = 0
         self.action_space = spaces.Box(low=np.array([-500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
@@ -410,7 +374,6 @@ class ContactProcess(gym.Env):
                                                              2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,]), 
                                        shape=(37,), dtype=np.float32) 
         
-        print(self.action_space) #TODO: REMOVE THIS
 
         assert render_mode is None or render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
@@ -420,20 +383,25 @@ class ContactProcess(gym.Env):
         for i in range(4):
             for chem in self.chems:
                 obs[chem].append(self.shelf[i].material_dict[chem].mol)
-        for chem in self.chems:
+        for chem in self.chems: # converting lists to np arrays
             obs[chem] = np.array(obs[chem], dtype=np.float32)
         return obs
 
     def reset(self, seed=None, options=None):
-        self.product = 0
         self.shelf = self.make_shelf()
         self.previous_shelf = None
-        self.previous_product = 0
         self.currStep = 0
+        self.verbose = False
+        
         return (self._get_obs(), {})
     
     def default_reward(self, targ):
-            return self.shelf[3].material_dict[targ].mol
+            if (self.currStep < 10):
+                print("Rewards")
+                print(targ)
+                print(self.shelf[3].get_material_dataframe())
+            print("Rewarded:", self.shelf[3].material_dict[targ].mol)
+            return self.shelf[3].material_dict[targ].mol 
 
 
     def step(self, action):
@@ -444,16 +412,17 @@ class ContactProcess(gym.Env):
         self.reaction.update_concentrations(self.shelf[1])   # Update the concentrations of each vessel
         self.reaction.update_concentrations(self.shelf[2])
         self.reaction.update_concentrations(self.shelf[3])
-        self.product = self.shelf[0].material_dict["SO3"].mol
-        terminated = False
         terminated = self.hasBeenNoChange()
-        if (self.currStep > self.max_steps):
+        if (self.currStep > self.max_steps): 
             terminated = True
         reward += self.default_reward(self.target_material)
-        self.previous_product = self.product
         self.copyShelf()          
         observation = self._get_obs()
         self.currStep += 1
+        # if (self.verbose)
+        if (self.currStep < 10):
+            self.printData()
+        print("Temperature: ", self.shelf[0].temperature)
         return observation, reward, terminated, False, dict()
     
         #Check all vessels from previous iteration vs now. If there has been no change, return False
@@ -465,12 +434,12 @@ class ContactProcess(gym.Env):
                     prev = self.previous_shelf[i].material_dict[chem].mol
                     curr = self.shelf[i].material_dict[chem].mol
                     totalDiff += abs(prev - curr)
-                    if totalDiff > 0.000002:
+                    if totalDiff > 0.00001:
                         return False
         else:
             return False
         
-        print("**No more change in the dataset detected**")
+        # print("**No more change in the dataset detected**")
         return True
     
     def copyShelf(self):
@@ -492,8 +461,8 @@ class ContactProcess(gym.Env):
         actionReward = 0
 
         self.shelf[0].temperature += action[0]
-        #TODO: DECREMENT THE REWARD TO ACCOUNT FOR TEMP
-        #return THE REWARD
+        if self.shelf[0].temperature >= 400:
+            actionReward -= ((self.shelf[0].temperature - 400)**2) * 0.00001
         for i in range(3):
             chemical = self.chems[i]
             for j in range(12):
@@ -564,13 +533,20 @@ class ContactProcess(gym.Env):
     def pour(self, source, dest, amount, chemical):
         # If the agent tries to move too much, move all you can and reward -100
         if self.shelf[source].material_dict[chemical].mol < amount:
-            # print(f"Transferring {self.shelf[source].material_dict[chemical].mol} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
+            # if (self.verbose):
+            if (self.currStep<10):
+                print("Not enough material to pour: ", amount, " of ", chemical, " from ", self.shelf[source].label, " to ", self.shelf[dest].label)
+                print(f"Transferring {self.shelf[source].material_dict[chemical].mol} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
             self.shelf[dest].material_dict[chemical].mol += self.shelf[source].material_dict[chemical].mol
             self.shelf[source].material_dict[chemical].mol = 0
-            return -100.0
-        
-        # print(f"Transferring {amount} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
+            return -2.0
+        # if (self.verbose):
+        if (self.currStep < 10):
+            print(f"Transferring {amount} of {chemical} from {self.shelf[source].label} to {self.shelf[dest].label}")
         #else, move the requested amount and reward -.0001
         self.shelf[source].material_dict[chemical].mol -= amount
         self.shelf[dest].material_dict[chemical].mol += amount
         return -0.0001
+    
+    def render(self):
+        pass

@@ -1,0 +1,10 @@
+The action space is Box([-500.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.    0.
+    0.], [500.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.
+   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.   2.
+   2.   2.   2.   2.   2.   2.   2.   2.   2.], (37,), float32)
+The observation space is Dict('O2': Box(0.0, 2.0, (4,), float32), 'SO2': Box(0.0, 2.0, (4,), float32), 'SO3': Box(0.0, 2.0, (4,), float32))
+Using cpu device
+<stable_baselines3.a2c.a2c.A2C object at 0x16c368f90>
+
